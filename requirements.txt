@@ -1,7 +1,6 @@
 streamlit
 pandas
-io
-matplotlib.pyplot
+matplotlib
 seaborn
 numpy
 sklearn
