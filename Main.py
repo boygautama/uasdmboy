@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import io
+import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
@@ -58,3 +59,21 @@ with st.expander('VISUALISASI'):
      plt.yticks(fontsize=8)
      plt.title('Korelasi Umur Terhadap N-K',fontsize=10)
      st.pyplot(fig)
+
+     # Bar plot of Sex
+     sex_counts = data['Sex'].value_counts().reset_index()
+     sex_counts.columns = ['Sex', 'Count']
+     fig_sex = px.bar(sex_counts, x='Sex', y='Count', labels={'Sex': 'Sex', 'Count': 'Count'}, title='Sex Distribution')
+     st.plotly_chart(fig_sex)
+    
+    # Bar plot of BP
+     bp_counts = df['BP'].value_counts().reset_index()
+     bp_counts.columns = ['BP', 'Count']
+     fig_bp = px.bar(bp_counts, x='BP', y='Count', labels={'BP': 'Blood Pressure', 'Count': 'Count'}, title='Blood Pressure Distribution')
+     st.plotly_chart(fig_bp)
+        
+    # Bar plot of Cholesterol
+     cholesterol_counts = df['Cholesterol'].value_counts().reset_index()
+     cholesterol_counts.columns = ['Cholesterol', 'Count']
+     fig_cholesterol = px.bar(cholesterol_counts, x='Cholesterol', y='Count', labels={'Cholesterol': 'Cholesterol', 'Count': 'Count'}, title='Cholesterol Distribution')
+     st.plotly_chart(fig_cholesterol)
