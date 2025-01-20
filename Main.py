@@ -55,20 +55,69 @@ with st.expander('VISUALISASI'):
      plt.title('Korelasi Umur Terhadap N-K',fontsize=10)
      st.pyplot(fig)
 
-     # Bar plot of Sex
+     # Sex
      sex_counts = data['Sex'].value_counts().reset_index()
      sex_counts.columns = ['Sex', 'Count']
      fig_sex = px.bar(sex_counts, x='Sex', y='Count', labels={'Sex': 'Sex', 'Count': 'Count'}, title='Sex Distribution')
      st.plotly_chart(fig_sex)
     
-    # Bar plot of BP
+    # BP
      bp_counts = data['BP'].value_counts().reset_index()
      bp_counts.columns = ['BP', 'Count']
      fig_bp = px.bar(bp_counts, x='BP', y='Count', labels={'BP': 'Blood Pressure', 'Count': 'Count'}, title='Blood Pressure Distribution')
      st.plotly_chart(fig_bp)
         
-    # Bar plot of Cholesterol
+    # Cholesterol
      cholesterol_counts = data['Cholesterol'].value_counts().reset_index()
      cholesterol_counts.columns = ['Cholesterol', 'Count']
      fig_cholesterol = px.bar(cholesterol_counts, x='Cholesterol', y='Count', labels={'Cholesterol': 'Cholesterol', 'Count': 'Count'}, title='Cholesterol Distribution')
      st.plotly_chart(fig_cholesterol)
+
+
+with st.expander('Modelling'):
+    st.write('Splitting')
+    data=data.drop(columns=['Sex','BP', 'Cholesterol','Drug'])
+    st.write(f'Dataset : {data.shape}')
+    
+    X_train,X_test,y_train,y_test = train_test_split(data.drop(['Na_to_K'],axis=1), 
+                                                     data['Na_to_K'],
+                                                     test_size=0.30)
+    
+    st.success('Apply Random Forest Regressor')
+    rf_regressor = RandomForestRegressor(max_depth=2,random_state=0)
+    rf_regressor.fit(X_train,y_train)
+    #make prediction
+    y_pred_rf = rf_regressor.predict(X_test)
+    score = mean_absolute_error(y_test, y_pred_rf)
+    st.write(score)
+
+
+     # Sidebar
+    st.sidebar.header('Informasi Pasien')
+    age = st.sidebar.slider('Umur', 15, 75, 50)
+    sex = st.sidebar.selectbox('Kelamin', ['Female', 'Male'])
+    bp = st.sidebar.selectbox('Tekanan Darah', ['LOW', 'NORMAL', 'HIGH'])
+    cholesterol = st.sidebar.selectbox('Cholesterol', ['NORMAL', 'HIGH'])
+    na_to_k = st.sidebar.slider('Na_to_K', 5.0, 40.0, 15.0)
+
+     # Prediction
+new_patient = pd.DataFrame({
+    'Age': [age],
+    'Sex': [sex],
+    'BP': [bp],
+    'Cholesterol': [cholesterol],
+    'Na_to_K': [na_to_k]
+})
+
+st.write("Prediksi Data Pasien:")
+st.write(new_patient)
+
+required_columns = ['Age', 'Sex', 'BP', 'Cholesterol', 'Na_to_K']
+if all(column in data.columns for column in required_columns):
+    # Predict the customer group
+    X = data[required_columns]
+    predictions = rf_regressor.predict(new_patient).reshape(1,-1)
+    data['Drug_pred'] = predictions
+
+    st.write("Predictions:")
+    st.write(data[['Age', 'Sex', 'BP', 'Cholesterol', 'Na_to_K', 'Drug', 'Drug_pred']])
