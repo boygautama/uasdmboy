@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import io
 import plotly.express as px
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -16,11 +15,7 @@ with st.expander('Informasi Dataset'):
     st.write(data)
 
     st.success('Informasi Dataset')
-    data1 = pd.DataFrame(data)
-    buffer = io.StringIO()
-    data1.info(buf=buffer)
-    s = buffer.getvalue()
-    st.text(s)
+    st.write(data.describe())
     
     st.success('Analisa Univariat')
     deskriptif = data.describe()
