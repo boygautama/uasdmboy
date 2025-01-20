@@ -62,13 +62,13 @@ with st.expander('VISUALISASI'):
      st.plotly_chart(fig_sex)
     
     # Bar plot of BP
-     bp_counts = df['BP'].value_counts().reset_index()
+     bp_counts = data['BP'].value_counts().reset_index()
      bp_counts.columns = ['BP', 'Count']
      fig_bp = px.bar(bp_counts, x='BP', y='Count', labels={'BP': 'Blood Pressure', 'Count': 'Count'}, title='Blood Pressure Distribution')
      st.plotly_chart(fig_bp)
         
     # Bar plot of Cholesterol
-     cholesterol_counts = df['Cholesterol'].value_counts().reset_index()
+     cholesterol_counts = data['Cholesterol'].value_counts().reset_index()
      cholesterol_counts.columns = ['Cholesterol', 'Count']
      fig_cholesterol = px.bar(cholesterol_counts, x='Cholesterol', y='Count', labels={'Cholesterol': 'Cholesterol', 'Count': 'Count'}, title='Cholesterol Distribution')
      st.plotly_chart(fig_cholesterol)
